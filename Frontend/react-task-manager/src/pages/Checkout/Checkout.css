@@ -1,0 +1,103 @@
+/* Checkout Page Styling */
+
+.checkout-page {
+  font-family: 'Inter', sans-serif;
+  color: #1e293b;
+  background-color: #f8fafc;
+  min-height: 80vh;
+}
+
+.checkout-page-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: #0f172a;
+}
+
+.back-to-cart-link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.back-to-cart-link:hover {
+  color: #4f46e5 !important;
+}
+
+.checkout-form-card {
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: 16px;
+}
+
+.checkout-section-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #0f172a;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 12px;
+}
+
+.checkout-summary-card {
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: 20px;
+}
+
+.checkout-item-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.item-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.item-qty {
+  font-size: 0.8rem;
+}
+
+.item-price {
+  font-size: 0.95rem;
+}
+
+.btn-pay {
+  background-color: #4f46e5 !important;
+  border: none !important;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-pay:hover {
+  background-color: #4338ca !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.45);
+}
+
+/* Success State View */
+.success-checkout-container {
+  padding: 100px 0;
+  max-width: 600px;
+}
+
+.success-icon {
+  color: #10b981; /* Premium Emerald */
+}
+
+.success-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: #0f172a;
+}
+
+.success-text {
+  font-size: 1.1rem;
+}

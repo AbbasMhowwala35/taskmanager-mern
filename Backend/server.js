@@ -3,8 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import connectDB from "./config/db.js";
-import taskRoutes from "./routes/taskRoutes.js";
-
+import productRoutes from "./routes/productRoutes.js";
 dotenv.config();
 
 connectDB();
@@ -20,8 +19,8 @@ app.get("/", (req, res) => {
 
 
 // TASK ROUTES
-app.use("/api/tasks", taskRoutes);
-
+app.use("/api/products", productRoutes);
+console.log("Product Routes Loaded");
 
 const PORT = process.env.PORT || 8000;
 

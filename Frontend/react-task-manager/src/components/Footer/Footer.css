@@ -1,0 +1,126 @@
+/* Footer Component Styling */
+
+.footer-custom {
+  background-color: #0f172a; /* Slate 900 */
+  color: #f1f5f9; /* Slate 100 */
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-brand {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+}
+
+.footer-brand span {
+  color: #818cf8; /* Light Indigo */
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  color: #94a3b8; /* Slate 400 */
+  line-height: 1.6;
+}
+
+.footer-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+.footer-links {
+  margin: 0;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  font-size: 0.92rem;
+  color: #94a3b8;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: #818cf8;
+  padding-left: 4px;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  color: #94a3b8;
+  transition: all 0.25s ease;
+  text-decoration: none;
+}
+
+.social-icon:hover {
+  background: #818cf8;
+  color: #ffffff;
+  transform: translateY(-3px);
+}
+
+.footer-newsletter {
+  position: relative;
+}
+
+.newsletter-input {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+}
+
+.newsletter-input::placeholder {
+  color: #64748b;
+}
+
+.newsletter-input:focus {
+  border-color: #818cf8 !important;
+  box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2) !important;
+}
+
+.btn-primary-custom {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 500;
+  padding: 10px 20px;
+  transition: all 0.25s ease;
+}
+
+.btn-primary-custom:hover {
+  background-color: #4338ca;
+  border-color: #4338ca;
+}
+
+.footer-bottom {
+  border-top-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.footer-copyright {
+  font-size: 0.85rem;
+}
+
+.footer-bottom-links a {
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.footer-bottom-links a:hover {
+  color: #818cf8 !important;
+}

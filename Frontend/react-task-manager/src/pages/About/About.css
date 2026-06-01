@@ -1,0 +1,98 @@
+/* About Page Styling */
+
+.about-page {
+  font-family: 'Inter', sans-serif;
+  color: #1e293b;
+}
+
+.about-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #4f46e5;
+}
+
+.about-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.about-subtitle {
+  font-size: 1.1rem;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.story-heading {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #0f172a;
+}
+
+.story-text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.about-image-wrapper img {
+  border: 6px solid #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.value-card {
+  border-radius: 16px;
+  transition: all 0.25s ease;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05) !important;
+}
+
+.value-icon {
+  width: 52px;
+  height: 52px;
+  background-color: rgba(79, 70, 229, 0.08);
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.value-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #1e293b;
+}
+
+.stat-item {
+  padding: 20px;
+}
+
+.stat-number {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #4f46e5;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 991.98px) {
+  .about-title {
+    font-size: 2.2rem;
+  }
+  .story-heading {
+    font-size: 1.75rem;
+  }
+}

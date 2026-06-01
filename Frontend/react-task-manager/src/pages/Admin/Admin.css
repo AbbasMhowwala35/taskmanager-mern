@@ -1,0 +1,249 @@
+/* Admin Dashboard Portal Styling */
+
+.admin-page {
+  font-family: 'Inter', sans-serif;
+  color: #1e293b;
+  background-color: #f8fafc;
+  min-height: 80vh;
+}
+
+.admin-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: #0f172a;
+}
+
+.btn-add-product {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-add-product:hover {
+  background-color: #4338ca;
+  border-color: #4338ca;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.45);
+}
+
+/* Stat Cards */
+.stat-card {
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.02) !important;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.stat-number {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Colors for Stat Cards */
+.bg-indigo-light { background-color: rgba(79, 70, 229, 0.08); }
+.text-indigo { color: #4f46e5; }
+
+.bg-green-light { background-color: rgba(16, 185, 129, 0.08); }
+.text-green { color: #10b981; }
+
+.bg-amber-light { background-color: rgba(251, 191, 36, 0.08); }
+.text-amber { color: #fbbf24; }
+
+.bg-blue-light { background-color: rgba(59, 130, 246, 0.08); }
+.text-blue { color: #3b82f6; }
+
+/* Product Table Card */
+.product-table-card {
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.card-header-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #0f172a;
+}
+
+.admin-table th {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 18px 24px;
+}
+
+.admin-table td {
+  padding: 16px 24px;
+}
+
+.admin-item-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+}
+
+.admin-item-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.98rem;
+  color: #1e293b;
+}
+
+.admin-category-badge {
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 4px 10px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.status-badge.featured {
+  background-color: rgba(251, 191, 36, 0.12);
+  color: #d97706; /* Darker amber */
+}
+
+.status-badge.standard {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.btn-action {
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+/* Modals */
+.admin-modal .modal-content {
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+.modal-heading {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.45rem;
+  color: #0f172a;
+  padding: 10px 10px 0;
+}
+
+.btn-modal-submit {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+}
+
+.btn-modal-submit:hover {
+  background-color: #4338ca;
+  border-color: #4338ca;
+}
+
+.custom-checkbox .form-check-input {
+  cursor: pointer;
+}
+
+.custom-checkbox .form-check-input:checked {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+}
+
+/* Custom Tabs Styling */
+.admin-custom-tabs {
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.admin-custom-tabs .nav-link {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  color: #64748b;
+  border: none;
+  padding: 12px 20px;
+  position: relative;
+  transition: color 0.25s ease;
+}
+
+.admin-custom-tabs .nav-link:hover {
+  color: #4f46e5;
+  background: none;
+}
+
+.admin-custom-tabs .nav-link.active {
+  color: #4f46e5;
+  background: none;
+}
+
+.admin-custom-tabs .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #4f46e5;
+}
+
+/* Form Custom Controls */
+.form-label-custom {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.form-input-custom {
+  padding: 10px 14px;
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  font-size: 0.92rem;
+  color: #1e293b;
+  transition: all 0.2s ease;
+}
+
+.form-input-custom:focus {
+  background-color: #ffffff !important;
+  border-color: #4f46e5 !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+}
+
+/* List group borders */
+.list-group-item {
+  background: transparent;
+}
+

@@ -1,0 +1,163 @@
+/* Cart Page Styling */
+
+.cart-page {
+  font-family: 'Inter', sans-serif;
+  color: #1e293b;
+  background-color: #f8fafc;
+  min-height: 70vh;
+}
+
+.cart-page-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: #0f172a;
+}
+
+.cart-table-wrapper {
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.cart-table th {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-bottom-width: 1px;
+  padding-bottom: 15px;
+}
+
+.cart-table td {
+  padding: 20px 10px;
+}
+
+.cart-item-image {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+}
+
+.cart-item-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #1e293b;
+}
+
+.cart-item-cat {
+  font-size: 0.8rem;
+}
+
+.qty-control {
+  background-color: #f1f5f9;
+  padding: 4px;
+  border-radius: 8px;
+  display: inline-flex;
+}
+
+.qty-btn {
+  background: none;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+.qty-btn:hover {
+  background-color: #ffffff;
+  color: #4f46e5;
+}
+
+.qty-val {
+  font-size: 0.9rem;
+  font-weight: 600;
+  width: 24px;
+  text-align: center;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.btn-remove-item {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  transition: color 0.2s ease;
+}
+
+.btn-remove-item:hover {
+  color: #ef4444; /* Alert Red */
+}
+
+/* Summary Card */
+.cart-summary-card {
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.summary-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #0f172a;
+}
+
+.summary-row {
+  font-size: 0.95rem;
+}
+
+.total-label {
+  font-size: 1.15rem;
+  color: #0f172a;
+}
+
+.total-val {
+  font-size: 1.35rem;
+  color: #4f46e5;
+}
+
+.btn-checkout {
+  background-color: #4f46e5 !important;
+  border: none !important;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-checkout:hover {
+  background-color: #4338ca !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.45);
+}
+
+.shipping-notice {
+  font-size: 0.8rem;
+}
+
+/* Empty Cart View */
+.empty-cart-container {
+  padding: 100px 0;
+  max-width: 600px;
+}
+
+.empty-cart-icon {
+  color: #cbd5e1;
+}
+
+.empty-cart-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 2.2rem;
+  color: #0f172a;
+}
+
+.empty-cart-text {
+  font-size: 1.05rem;
+}
