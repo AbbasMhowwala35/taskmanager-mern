@@ -68,7 +68,7 @@ const Cart = () => {
                           </div>
                         </div>
                       </td>
-                      <td>${item.price.toFixed(2)}</td>
+                      <td>₹{item.price.toFixed(2)}</td>
                       <td>
                         <div className="qty-control d-flex align-items-center gap-2">
                           <button 
@@ -87,7 +87,7 @@ const Cart = () => {
                         </div>
                       </td>
                       <td className="text-end font-semibold">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ₹{(item.price * item.quantity).toFixed(2)}
                       </td>
                       <td className="text-end">
                         <button 
@@ -112,12 +112,12 @@ const Cart = () => {
               
               <div className="summary-row d-flex justify-content-between mb-3">
                 <span className="text-muted">Subtotal</span>
-                <span className="font-semibold">${cartTotal.toFixed(2)}</span>
+                <span className="font-semibold">₹{cartTotal.toFixed(2)}</span>
               </div>
               
               <div className="summary-row d-flex justify-content-between mb-3">
                 <span className="text-muted">Shipping</span>
-                <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                <span>{shipping === 0 ? "Free" : `₹${shipping.toFixed(2)}`}</span>
               </div>
 
               <div className="summary-row d-flex justify-content-between mb-3">

@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 // Contexts
-import { ProductProvider } from "./context/ProductContext";
 import { CartProvider } from "./context/CartContext";
 import { SettingsProvider } from "./context/SettingsContext";
 
@@ -22,7 +21,6 @@ import Admin from "./pages/Admin/Admin";
 function App() {
   return (
     <SettingsProvider>
-      <ProductProvider>
         <CartProvider>
           <Router>
             <div className="d-flex flex-column min-vh-100">
@@ -46,7 +44,6 @@ function App() {
             </div>
           </Router>
         </CartProvider>
-      </ProductProvider>
     </SettingsProvider>
   );
 }

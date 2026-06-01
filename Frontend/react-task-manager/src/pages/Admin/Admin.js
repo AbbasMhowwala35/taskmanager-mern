@@ -10,10 +10,10 @@ const Admin = () => {
   const {
     heroSlides, addHeroSlide, updateHeroSlide, deleteHeroSlide,
     logoSettings, setLogoSettings,
-    socialLinks, setSocialLinks,
-    categories, addCategory, deleteCategory
+    socialLinks, setSocialLinks
   } = useSettings();
 
+  const REACT_API_URL = process.env.REACT_APP_API_URL;
   // Tab State
   const [activeTab, setActiveTab] = useState("products");
 
@@ -47,7 +47,10 @@ const Admin = () => {
   });
 
   // Category Input State
+  const [categories, setCategories] = useState([]);
+  const [catEditMode, setCatEditMode] = useState(false);
   const [newCatName, setNewCatName] = useState("");
+  const [selectedCatId, setSelectedCatId] = useState(null);
 
   // Branding & Social Inputs
   const [tempLogo, setTempLogo] = useState({ ...logoSettings });
@@ -57,9 +60,7 @@ const Admin = () => {
   const totalProducts = products.length;
   const totalCategories = categories.length;
   const featuredCount = products.filter((p) => p.featured).length;
-  const averagePrice = totalProducts > 0
-    ? products.reduce((acc, p) => acc + p.price, 0) / totalProducts
-    : 0;
+  const averagePrice = totalProducts > 0? products.reduce((acc, p) => acc + p.price, 0) / totalProducts : 0;
 
   // PRODUCT HANDLERS
   const handleProductModalClose = () => {
@@ -81,13 +82,21 @@ const Admin = () => {
 
   const fetchProducts = async () => {
     const response = await axios.get(
-      "http://localhost:8000/api/products"
+      `${REACT_API_URL}/products`
     );
-    setProducts(response.data);
+    setProducts(response.data.data);
+  };
+
+  const fetchCategories = async () => {
+    const response = await axios.get(
+      `${REACT_API_URL}/categories`
+    );
+    setCategories(response.data.data);
   };
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
 
   const handleProductShowAdd = () => {
@@ -116,8 +125,6 @@ const Admin = () => {
     setShowProductModal(true);
   };
 
-  console.log(selectedProductId)
-
   const handleProductInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setProductFormData({
@@ -131,12 +138,12 @@ const Admin = () => {
     if (productEditMode) {
       // updateProduct({ id: selectedProductId, ...productFormData });
       await axios.put(
-        `http://localhost:8000/api/products/${selectedProductId}`,
+        `${REACT_API_URL}/products/${selectedProductId}`,
         productFormData
       );
     } else {
       await axios.post(
-        "http://localhost:8000/api/products",
+        `${REACT_API_URL}/products`,
         productFormData
       );
     }
@@ -201,10 +208,22 @@ const Admin = () => {
   };
 
   // CATEGORY HANDLERS
-  const handleAddCategory = (e) => {
+  const handleAddCategory = async (e) => {
     e.preventDefault();
     if (newCatName.trim()) {
-      addCategory(newCatName.trim());
+      if (catEditMode) {
+        // updateProduct({ id: selectedProductId, ...productFormData });
+        await axios.put(
+          `${REACT_API_URL}/categories/${selectedCatId}`,
+          { name: newCatName }
+        );
+      } else {
+        await axios.post(
+          `${REACT_API_URL}/categories`,
+          { name: newCatName }
+        );
+      }
+      fetchCategories();
       setNewCatName("");
     }
   };
@@ -228,16 +247,26 @@ const Admin = () => {
   };
 
   const deleteProduct = async (id) => {
-    await axios.delete(
-      `http://localhost:8000/api/products/${id}`
-    );
-    fetchProducts();
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      await axios.delete(
+        `${REACT_API_URL}/products/${id}`
+      );
+      fetchProducts();
+    }
+  };
+
+  const deleteCategory = async (id) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      await axios.delete(
+        `${REACT_API_URL}/categories/${id}`
+      );
+      fetchCategories();
+    }
   };
 
   return (
     <div className="admin-page py-5">
       <Container>
-        {/* Header */}
         <div className="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
           <div>
             <h1 className="admin-title mb-1">Admin Portal</h1>
@@ -246,15 +275,8 @@ const Admin = () => {
         </div>
 
         {/* Dynamic Tabs */}
-        <Tabs
-          id="admin-tabs"
-          activeKey={activeTab}
-          onSelect={(k) => setActiveTab(k)}
-          className="mb-4 admin-custom-tabs"
-        >
-          {/* 1. PRODUCTS TAB */}
+        <Tabs id="admin-tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="mb-4 admin-custom-tabs">
           <Tab eventKey="products" title="Products Inventory">
-            {/* Dashboard Stat Cards */}
             <Row className="gy-4 mb-4 mt-1">
               <Col lg={3} sm={6}>
                 <Card className="stat-card border-0 shadow-sm p-3">
@@ -300,7 +322,7 @@ const Admin = () => {
                   <Card.Body className="d-flex align-items-center justify-content-between">
                     <div>
                       <span className="stat-label text-muted text-uppercase mb-1 d-block">Average Price</span>
-                      <h3 className="stat-number mb-0">${averagePrice.toFixed(2)}</h3>
+                      <h3 className="stat-number mb-0">₹{averagePrice.toFixed(2)}</h3>
                     </div>
                     <div className="stat-icon bg-blue-light text-blue">
                       <FiDollarSign size={22} />
@@ -336,14 +358,13 @@ const Admin = () => {
                           <img src={product.image} alt={product.name} className="admin-item-thumb rounded-3" />
                           <div>
                             <h6 className="admin-item-name mb-0">{product.name}</h6>
-                            <small className="text-muted">ID: {product.id}</small>
                           </div>
                         </div>
                       </td>
                       <td>
                         <span className="admin-category-badge">{product.category}</span>
                       </td>
-                      <td className="font-semibold">${product.price.toFixed(2)}</td>
+                      <td className="font-semibold">₹{product.price.toFixed(2)}</td>
                       <td>
                         <span className={product.featured ? "status-badge featured" : "status-badge standard"}>
                           {product.featured ? "Yes" : "No"}
@@ -360,7 +381,7 @@ const Admin = () => {
                           <Button variant="outline-primary" size="sm" onClick={() => handleProductShowEdit(product)} className="btn-action">
                             <FiEdit size={16} />
                           </Button>
-                          <Button variant="outline-danger" size="sm" onClick={() => deleteProduct(product.id)} className="btn-action">
+                          <Button variant="outline-danger" size="sm" onClick={() => deleteProduct(product._id)} className="btn-action">
                             <FiTrash2 size={16} />
                           </Button>
                         </div>
@@ -433,7 +454,7 @@ const Admin = () => {
             <Row className="gy-4 mt-2">
               <Col md={6}>
                 <Card className="border-0 shadow-sm rounded-4 p-4">
-                  <h5 className="mb-3">Add Category</h5>
+                  <h5 className="mb-3">{catEditMode ? "Edit Category" : "Add Category"}</h5>
                   <Form onSubmit={handleAddCategory} className="d-flex gap-2">
                     <Form.Control
                       type="text"
@@ -444,7 +465,7 @@ const Admin = () => {
                       required
                     />
                     <Button type="submit" className="btn-add-product px-4">
-                      Add
+                      {catEditMode ? "Update" : "Add"}
                     </Button>
                   </Form>
                 </Card>
@@ -455,19 +476,32 @@ const Admin = () => {
                     <h5 className="mb-0">Current Categories</h5>
                   </Card.Header>
                   <ListGroup variant="flush" className="border-top border-light">
-                    {categories.map((cat, idx) => (
-                      <ListGroup.Item key={idx} className="d-flex justify-content-between align-items-center py-3 border-light">
-                        <span className="font-semibold"><FiTag className="me-2 text-muted" />{cat}</span>
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => {
-                            if (window.confirm(`Delete category "${cat}"?`)) deleteCategory(cat);
-                          }}
-                          className="btn-action"
-                        >
-                          <FiTrash2 size={14} />
-                        </Button>
+                    {categories.map((cat) => (
+                      <ListGroup.Item key={cat._id} className="d-flex justify-content-between align-items-center py-3 border-light">
+                        <span className="font-semibold"><FiTag className="me-2 text-muted" />{cat?.name}</span>
+                        <div className="gap-2 d-flex">
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            className="btn-action"
+                            onClick={() => {
+                              setCatEditMode(true);
+                              setSelectedCatId(cat._id);
+                              setNewCatName(cat.name);
+                            }}>
+                            <FiEdit size={14} />
+                          </Button>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => {
+                              if (window.confirm(`Delete category "${cat?.name}"?`)) deleteCategory(cat?._id);
+                            }}
+                            className="btn-action"
+                          >
+                            <FiTrash2 size={14} />
+                          </Button>
+                        </div>
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
@@ -625,7 +659,7 @@ const Admin = () => {
                     className="form-input-custom"
                   >
                     {categories.map((cat, i) => (
-                      <option key={i} value={cat}>{cat}</option>
+                      <option key={i} value={cat}>{cat?.name}</option>
                     ))}
                   </Form.Select>
                 </Form.Group>

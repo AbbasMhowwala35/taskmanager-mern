@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { FiFacebook, FiTwitter, FiInstagram } from "react-icons/fi";
 import { useSettings } from "../../context/SettingsContext";
 import "./Footer.css";
+import axios from "axios";
 
 const Footer = () => {
-  const { logoSettings, socialLinks, categories } = useSettings();
+  const REACT_API_URL = process.env.REACT_APP_API_URL;
+  const { logoSettings, socialLinks } = useSettings();
+  const [categories, setCategories] = useState([]);
+
+  const fetchCategories = async () => {
+    const response = await axios.get(
+      `${REACT_API_URL}/categories`
+    );
+    setCategories(response.data.data);
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,7 +75,7 @@ const Footer = () => {
             <ul className="list-unstyled footer-links">
               {categories.map((cat, idx) => (
                 <li key={idx}>
-                  <a href={`/#featured-products`}>{cat}</a>
+                  <a href={`/#featured-products`}>{cat?.name}</a>
                 </li>
               ))}
             </ul>
