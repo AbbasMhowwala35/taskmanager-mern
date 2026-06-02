@@ -6,12 +6,14 @@ import "./ProductCard.css";
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const image = Array.isArray(product.image) ? product.image[0] : product.image;
+  const category = typeof product.category === "object" ? product.category?.name : product.category;
 
   return (
     <Card className="product-card h-100 border-0 shadow-sm">
       <div className="product-img-wrapper position-relative overflow-hidden">
-        <Card.Img variant="top" src={product.image} alt={product.name} className="product-image" />
-        <span className="product-category-badge position-absolute">{product.category}</span>
+        <Card.Img variant="top" src={image} alt={product.name} className="product-image" />
+        <span className="product-category-badge position-absolute">{category}</span>
       </div>
       
       <Card.Body className="d-flex flex-column p-4">

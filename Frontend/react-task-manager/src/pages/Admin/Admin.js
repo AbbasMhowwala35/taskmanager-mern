@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Container, Row, Col, Card, Table, Button, Modal, Form, Tabs, Tab, ListGroup } from "react-bootstrap";
 import { FiPlus, FiEdit, FiTrash2, FiTag, FiDollarSign, FiStar, FiGrid, FiSettings, FiShare2, FiSave } from "react-icons/fi";
 import axios from "axios";
@@ -27,14 +27,15 @@ const Admin = () => {
   const [productFormData, setProductFormData] = useState({
     name: "",
     price: "",
-    category: "Audio",
-    image: "",
+    category: "",
+    // images: [],
     description: "",
     featured: false,
     specs: "",
-    rating: 4.5,
+    rating: 0,
     reviews: 0
   });
+  const [images, setImages] = useState([]);
 
   // Slider Modal State
   const [showSlideModal, setShowSlideModal] = useState(false);
@@ -62,7 +63,15 @@ const Admin = () => {
   const totalProducts = products.length;
   const totalCategories = categories.length;
   const featuredCount = products.filter((p) => p.featured).length;
-  const averagePrice = totalProducts > 0? products.reduce((acc, p) => acc + p.price, 0) / totalProducts : 0;
+  const averagePrice = totalProducts > 0 ? products.reduce((acc, p) => acc + p.price, 0) / totalProducts : 0;
+
+  const getProductImage = (product) => {
+    if (Array.isArray(product.image)) {
+      return product.image[0] || "";
+    }
+
+    return product.image || "";
+  };
 
   // PRODUCT HANDLERS
   const handleProductModalClose = () => {
@@ -72,7 +81,7 @@ const Admin = () => {
     setProductFormData({
       name: "",
       price: "",
-      category: categories[0] || "Audio",
+      category: categories[0]?._id || "",
       image: "",
       description: "",
       featured: false,
@@ -80,32 +89,39 @@ const Admin = () => {
       rating: 4.5,
       reviews: 0
     });
+    setImages([]);
   };
 
-  const fetchProducts = async () => {
-    const response = await axios.get(
-      `${REACT_API_URL}/products`
-    );
-    setProducts(response.data.data);
-  };
+  const fetchProducts = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `${REACT_API_URL}/products`
+      );
 
-  const fetchCategories = async () => {
+      setProducts(response.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [REACT_API_URL]);
+
+  const fetchCategories = useCallback(async () => {
     const response = await axios.get(
       `${REACT_API_URL}/categories`
     );
     setCategories(response.data.data);
-  };
+  }, [REACT_API_URL]);
 
   useEffect(() => {
     fetchProducts();
     fetchCategories();
-  }, []);
+  }, [fetchProducts, fetchCategories]);
 
   const handleProductShowAdd = () => {
     setProductEditMode(false);
+    setImages([]);
     setProductFormData((prev) => ({
       ...prev,
-      category: categories[0] || "Audio"
+      category: categories[0]?._id || ""
     }));
     setShowProductModal(true);
   };
@@ -116,7 +132,7 @@ const Admin = () => {
     setProductFormData({
       name: product.name,
       price: product.price,
-      category: product.category,
+      category: product.category?._id,
       image: product.image,
       description: product.description,
       featured: product.featured,
@@ -124,6 +140,7 @@ const Admin = () => {
       rating: product.rating,
       reviews: product.reviews
     });
+    setImages(Array.isArray(product.image) ? product.image : product.image ? [product.image] : []);
     setShowProductModal(true);
   };
 
@@ -135,19 +152,52 @@ const Admin = () => {
     });
   };
 
+  const handleImageUpload = async (e) => {
+    const files = e.target.files;
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("images", files[i]);
+    }
+    const data = await axios.post(
+      `${REACT_API_URL}/uploads`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    setImages(data.data);
+  };
+
   const handleProductSubmit = async (e) => {
     e.preventDefault();
+    // const formData = new FormData();
+    // formData.append("name", productFormData.name);
+    // formData.append("price", productFormData.price);
+    // formData.append("category", productFormData.category);
+    // formData.append("description", productFormData.description);
+    // formData.append("featured", productFormData.featured);
+    // formData.append("specs", productFormData.specs);
+    const payload = {
+      ...productFormData,
+      image: images.length > 0 ? images : productFormData.image
+    };
+
     if (productEditMode) {
-      await axios.put(
-        `${REACT_API_URL}/products/${selectedProductId}`,
-        productFormData,
-        { headers: authHeader() }
+      await axios.put(`${REACT_API_URL}/products/${selectedProductId}`, payload, {
+        headers: {
+          ...authHeader(),
+          // "Content-Type": "multipart/form-data",
+        },
+      }
       );
     } else {
-      await axios.post(
-        `${REACT_API_URL}/products`,
-        productFormData,
-        { headers: authHeader() }
+      await axios.post(`${REACT_API_URL}/products`, payload, {
+        headers: {
+          ...authHeader(),
+        },
+      }
       );
     }
     fetchProducts();
@@ -360,17 +410,17 @@ const Admin = () => {
                 </thead>
                 <tbody>
                   {products.map((product) => (
-                    <tr key={product.id} className="border-bottom border-light">
+                    <tr key={product._id} className="border-bottom border-light">
                       <td>
                         <div className="d-flex align-items-center gap-3">
-                          <img src={product.image} alt={product.name} className="admin-item-thumb rounded-3" />
+                          <img src={getProductImage(product)} alt={product.name} className="admin-item-thumb rounded-3" />
                           <div>
                             <h6 className="admin-item-name mb-0">{product.name}</h6>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <span className="admin-category-badge">{product.category}</span>
+                        <span className="admin-category-badge">{product.category?.name}</span>
                       </td>
                       <td className="font-semibold">₹{product.price.toFixed(2)}</td>
                       <td>
@@ -664,10 +714,13 @@ const Admin = () => {
                     name="category"
                     value={productFormData.category}
                     onChange={handleProductInputChange}
-                    className="form-input-custom"
                   >
-                    {categories.map((cat, i) => (
-                      <option key={i} value={cat}>{cat?.name}</option>
+                    <option value="">Select Category</option>
+
+                    {categories.map((cat) => (
+                      <option key={cat._id} value={cat._id}>
+                        {cat.name}
+                      </option>
                     ))}
                   </Form.Select>
                 </Form.Group>
@@ -675,15 +728,16 @@ const Admin = () => {
 
               <Col md={6}>
                 <Form.Group controlId="prodImage">
-                  <Form.Label className="form-label-custom">Image URL</Form.Label>
+                  <Form.Label className="form-label-custom">Product Image</Form.Label>
                   <Form.Control
-                    type="text"
-                    name="image"
-                    value={productFormData.image}
-                    onChange={handleProductInputChange}
+                    type="file"
+                    // name="image"
+                    // value={productFormData.image}
+                    onChange={handleImageUpload}
                     className="form-input-custom"
-                    placeholder="https://unsplash.com/..."
-                    required
+                    // placeholder="https://unsplash.com/..."
+                    multiple
+                    required={!productEditMode}
                   />
                 </Form.Group>
               </Col>

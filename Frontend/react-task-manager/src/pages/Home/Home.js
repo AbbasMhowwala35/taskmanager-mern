@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Container, Row, Col, Button, Carousel } from "react-bootstrap";
 import { FiTruck, FiShield, FiPhoneCall, FiRotateCcw } from "react-icons/fi";
 import { useSettings } from "../../context/SettingsContext";
@@ -13,16 +13,16 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const { heroSlides } = useSettings();
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     const response = await axios.get(
       `${REACT_API_URL}/products`
     );
     setProducts(response.data.data);
-  };
+  }, [REACT_API_URL]);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   const featuredProducts = products.filter((product) => product.featured);
 
