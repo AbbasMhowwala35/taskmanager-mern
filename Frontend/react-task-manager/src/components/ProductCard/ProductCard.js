@@ -1,18 +1,22 @@
 import React from "react";
 import { Card, Button } from "react-bootstrap";
 import { FiShoppingCart, FiStar } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import "./ProductCard.css";
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const productId = product._id || product.id;
   const image = Array.isArray(product.image) ? product.image[0] : product.image;
   const category = typeof product.category === "object" ? product.category?.name : product.category;
 
   return (
     <Card className="product-card h-100 border-0 shadow-sm">
       <div className="product-img-wrapper position-relative overflow-hidden">
-        <Card.Img variant="top" src={image} alt={product.name} className="product-image" />
+        <Link to={`/products/${productId}`}>
+          <Card.Img variant="top" src={image} alt={product.name} className="product-image" />
+        </Link>
         <span className="product-category-badge position-absolute">{category}</span>
       </div>
       
@@ -23,7 +27,11 @@ const ProductCard = ({ product }) => {
           <span className="rating-count ms-1">({product.reviews})</span>
         </div>
 
-        <Card.Title className="product-title mb-2">{product.name}</Card.Title>
+        <Card.Title className="product-title mb-2">
+          <Link to={`/products/${productId}`} className="text-decoration-none text-dark">
+            {product.name}
+          </Link>
+        </Card.Title>
         
         <Card.Text className="product-desc flex-grow-1 mb-3">
           {product.description.length > 80 
@@ -32,7 +40,7 @@ const ProductCard = ({ product }) => {
         </Card.Text>
 
         <div className="d-flex justify-content-between align-items-center mt-auto">
-          <span className="product-price">${product.price.toFixed(2)}</span>
+          <span className="product-price">₹{Number(product.price).toFixed(2)}</span>
           <Button 
             onClick={() => addToCart(product)} 
             className="btn-add-to-cart d-flex align-items-center gap-2"

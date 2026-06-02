@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { Container, Row, Col, Card, Table, Button, Modal, Form, Tabs, Tab, ListGroup } from "react-bootstrap";
-import { FiPlus, FiEdit, FiTrash2, FiTag, FiDollarSign, FiStar, FiGrid, FiSettings, FiShare2, FiSave } from "react-icons/fi";
+import { FiPlus, FiEdit, FiTrash2, FiTag, FiDollarSign, FiStar, FiGrid, FiSettings, FiShare2, FiSave, FiPackage } from "react-icons/fi";
 import axios from "axios";
 import { useSettings } from "../../context/SettingsContext";
 import { useAuth } from "../../context/AuthContext";
@@ -36,6 +36,7 @@ const Admin = () => {
     reviews: 0
   });
   const [images, setImages] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   // Slider Modal State
   const [showSlideModal, setShowSlideModal] = useState(false);
@@ -64,6 +65,8 @@ const Admin = () => {
   const totalCategories = categories.length;
   const featuredCount = products.filter((p) => p.featured).length;
   const averagePrice = totalProducts > 0 ? products.reduce((acc, p) => acc + p.price, 0) / totalProducts : 0;
+  const totalOrders = orders.length;
+  const orderRevenue = orders.reduce((acc, order) => acc + (order.total || 0), 0);
 
   const getProductImage = (product) => {
     if (Array.isArray(product.image)) {
@@ -111,10 +114,19 @@ const Admin = () => {
     setCategories(response.data.data);
   }, [REACT_API_URL]);
 
+  const fetchOrders = useCallback(async () => {
+    const response = await axios.get(
+      `${REACT_API_URL}/orders`,
+      { headers: authHeader() }
+    );
+    setOrders(response.data.data);
+  }, [REACT_API_URL, authHeader]);
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
-  }, [fetchProducts, fetchCategories]);
+    fetchOrders();
+  }, [fetchProducts, fetchCategories, fetchOrders]);
 
   const handleProductShowAdd = () => {
     setProductEditMode(false);
@@ -322,6 +334,15 @@ const Admin = () => {
     }
   };
 
+  const updateOrderStatus = async (id, status) => {
+    await axios.put(
+      `${REACT_API_URL}/orders/${id}/status`,
+      { status },
+      { headers: authHeader() }
+    );
+    fetchOrders();
+  };
+
   return (
     <div className="admin-page py-5">
       <Container>
@@ -446,6 +467,103 @@ const Admin = () => {
                       </td>
                     </tr>
                   ))}
+                </tbody>
+              </Table>
+            </Card>
+          </Tab>
+
+          <Tab eventKey="orders" title="Order Management">
+            <Row className="gy-4 mb-4 mt-1">
+              <Col lg={4} sm={6}>
+                <Card className="stat-card border-0 shadow-sm p-3">
+                  <Card.Body className="d-flex align-items-center justify-content-between">
+                    <div>
+                      <span className="stat-label text-muted text-uppercase mb-1 d-block">Total Orders</span>
+                      <h3 className="stat-number mb-0">{totalOrders}</h3>
+                    </div>
+                    <div className="stat-icon bg-indigo-light text-indigo">
+                      <FiPackage size={22} />
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col lg={4} sm={6}>
+                <Card className="stat-card border-0 shadow-sm p-3">
+                  <Card.Body className="d-flex align-items-center justify-content-between">
+                    <div>
+                      <span className="stat-label text-muted text-uppercase mb-1 d-block">Order Revenue</span>
+                      <h3 className="stat-number mb-0">₹{orderRevenue.toFixed(2)}</h3>
+                    </div>
+                    <div className="stat-icon bg-blue-light text-blue">
+                      <FiDollarSign size={22} />
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col lg={4} sm={6}>
+                <Card className="stat-card border-0 shadow-sm p-3">
+                  <Card.Body className="d-flex align-items-center justify-content-between">
+                    <div>
+                      <span className="stat-label text-muted text-uppercase mb-1 d-block">Active Orders</span>
+                      <h3 className="stat-number mb-0">{orders.filter((order) => !["Delivered", "Cancelled"].includes(order.status)).length}</h3>
+                    </div>
+                    <div className="stat-icon bg-amber-light text-amber">
+                      <FiStar size={22} />
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+
+            <Card className="product-table-card border-0 shadow-sm rounded-4 overflow-hidden">
+              <Table responsive borderless className="align-middle admin-table mb-0">
+                <thead>
+                  <tr className="border-bottom border-light text-muted uppercase-headers">
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Placed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map((order) => (
+                    <tr key={order._id} className="border-bottom border-light">
+                      <td>
+                        <div className="fw-semibold">#{order._id.slice(-8).toUpperCase()}</div>
+                        <small className="text-muted">{order.shippingAddress?.city}, {order.shippingAddress?.zipCode}</small>
+                      </td>
+                      <td>
+                        <div className="fw-semibold">{order.user?.name || `${order.shippingAddress?.firstName} ${order.shippingAddress?.lastName}`}</div>
+                        <small className="text-muted">{order.user?.email || order.shippingAddress?.email}</small>
+                      </td>
+                      <td>
+                        <div className="text-muted">{order.items?.length || 0} products</div>
+                        <small>{order.items?.[0]?.name}</small>
+                      </td>
+                      <td className="fw-semibold">₹{Number(order.total || 0).toFixed(2)}</td>
+                      <td>
+                        <Form.Select
+                          value={order.status}
+                          onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                          className="form-input-custom"
+                        >
+                          <option value="Placed">Placed</option>
+                          <option value="Processing">Processing</option>
+                          <option value="Shipped">Shipped</option>
+                          <option value="Delivered">Delivered</option>
+                          <option value="Cancelled">Cancelled</option>
+                        </Form.Select>
+                      </td>
+                      <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                  {orders.length === 0 && (
+                    <tr>
+                      <td colSpan="6" className="text-center text-muted py-4">No orders yet.</td>
+                    </tr>
+                  )}
                 </tbody>
               </Table>
             </Card>

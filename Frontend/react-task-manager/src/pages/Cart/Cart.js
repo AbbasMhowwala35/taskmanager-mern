@@ -58,7 +58,7 @@ const Cart = () => {
                       <td>
                         <div className="d-flex align-items-center gap-3 py-2">
                           <img 
-                            src={item.image} 
+                            src={Array.isArray(item.image) ? item.image[0] : item.image}
                             alt={item.name} 
                             className="cart-item-image rounded-3"
                           />
@@ -122,14 +122,14 @@ const Cart = () => {
 
               <div className="summary-row d-flex justify-content-between mb-3">
                 <span className="text-muted">Estimated Tax (8%)</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>₹{tax.toFixed(2)}</span>
               </div>
 
               <hr className="my-4" />
 
               <div className="summary-row d-flex justify-content-between mb-4">
                 <span className="total-label font-bold">Total</span>
-                <span className="total-val font-bold">${finalTotal.toFixed(2)}</span>
+                <span className="total-val font-bold">₹{finalTotal.toFixed(2)}</span>
               </div>
 
               <Button 
@@ -142,7 +142,7 @@ const Cart = () => {
 
               {shipping > 0 && (
                 <p className="shipping-notice text-center text-muted mt-3 mb-0">
-                  Add <strong className="text-dark">${(150 - cartTotal).toFixed(2)}</strong> more to unlock Free Shipping!
+                  Add <strong className="text-dark">₹{(150 - cartTotal).toFixed(2)}</strong> more to unlock Free Shipping!
                 </p>
               )}
             </div>

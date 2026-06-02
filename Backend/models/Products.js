@@ -18,6 +18,8 @@ const productSchema = new mongoose.Schema(
             required: true
         },
 
+        brand: String,
+
         image: [String],
 
         description: String,
@@ -37,6 +39,31 @@ const productSchema = new mongoose.Schema(
         reviews: {
             type: Number,
             default: 0
+        },
+
+        reviewList: [
+            {
+                user: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "User"
+                },
+                name: String,
+                rating: {
+                    type: Number,
+                    min: 1,
+                    max: 5
+                },
+                comment: String,
+                createdAt: {
+                    type: Date,
+                    default: Date.now
+                }
+            }
+        ],
+
+        countInStock: {
+            type: Number,
+            default: 25
         }
     },
     {

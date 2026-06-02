@@ -153,7 +153,7 @@ const Home = () => {
 
           <Row className="gy-4">
             {featuredProducts.map((product) => (
-              <Col key={product.id} lg={4} md={6}>
+              <Col key={product._id || product.id} lg={4} md={6}>
                 <ProductCard product={product} />
               </Col>
             ))}

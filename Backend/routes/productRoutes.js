@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllProducts, createProduct, updateProduct, deleteProduct } from "../controllers/productController.js";
+import { addProductReview, createProduct, deleteProduct, getAllProducts, getProductById, updateProduct } from "../controllers/productController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { adminOnly } from "../middlewares/adminMiddleware.js";
 import multer from "multer";
@@ -26,8 +26,10 @@ const upload = multer({
 });
 
 router.get("/", getAllProducts);                             // public
+router.get("/:id", getProductById);                          // public
 // router.post("/", protect, adminOnly, createProduct);        // admin only
 router.post("/", upload.array("images"), createProduct);
+router.post("/:id/reviews", protect, addProductReview);
 router.put("/:id", protect, adminOnly, upload.array("images"), updateProduct);      // admin only
 router.delete("/:id", protect, adminOnly, deleteProduct);   // admin only
 

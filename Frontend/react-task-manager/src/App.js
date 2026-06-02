@@ -24,6 +24,8 @@ import Checkout from "./pages/Checkout/Checkout";
 import Auth from "./pages/Auth/Auth";
 import AdminLogin from "./pages/AdminLogin/AdminLogin";
 import Admin from "./pages/Admin/Admin";
+import Shop from "./pages/Shop/Shop";
+import ProductDetails from "./pages/ProductDetails/ProductDetails";
 
 function App() {
   return (
@@ -38,6 +40,8 @@ function App() {
                 <Routes>
                   {/* Public routes */}
                   <Route path="/" element={<Home />} />
+                  <Route path="/shop" element={<Shop />} />
+                  <Route path="/products/:id" element={<ProductDetails />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/auth" element={<Auth />} />

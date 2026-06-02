@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { FiCheckCircle, FiArrowLeft, FiCreditCard } from "react-icons/fi";
+import axios from "axios";
 import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
 import "./Checkout.css";
 
 const Checkout = () => {
+  const REACT_API_URL = process.env.REACT_APP_API_URL;
   const { cartItems, cartTotal, clearCart } = useCart();
+  const { authHeader } = useAuth();
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [orderNumber, setOrderNumber] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -32,11 +39,47 @@ const Checkout = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate API call
-    setOrderPlaced(true);
-    clearCart();
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const payload = {
+        items: cartItems.map((item) => ({
+          product: item._id || item.id,
+          name: item.name,
+          image: Array.isArray(item.image) ? item.image[0] : item.image,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        shippingAddress: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          address: formData.address,
+          city: formData.city,
+          zipCode: formData.zipCode,
+        },
+        paymentMethod: "Card",
+        subtotal: cartTotal,
+        shipping,
+        tax,
+        total: finalTotal,
+      };
+
+      const response = await axios.post(`${REACT_API_URL}/orders`, payload, {
+        headers: authHeader()
+      });
+
+      setOrderNumber(response.data.data._id);
+      setOrderPlaced(true);
+      clearCart();
+    } catch (err) {
+      setError(err.response?.data?.message || "Unable to place order right now.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (orderPlaced) {
@@ -49,8 +92,9 @@ const Checkout = () => {
         <p className="success-text text-muted mb-4">
           Thank you for your purchase. We've sent a confirmation email with details of your order.
         </p>
-        <Button as={Link} to="/" className="btn-shop-now py-3 px-4">
-          Back To Home
+        {orderNumber && <p className="text-muted">Order ID: <strong>{orderNumber}</strong></p>}
+        <Button as={Link} to="/shop" className="btn-shop-now py-3 px-4">
+          Continue Shopping
         </Button>
       </Container>
     );
@@ -63,7 +107,7 @@ const Checkout = () => {
         <p className="empty-cart-text text-muted mb-4">
           Your cart is currently empty. Add some products before checking out.
         </p>
-        <Button as={Link} to="/" className="btn-shop-now py-3 px-4">
+        <Button as={Link} to="/shop" className="btn-shop-now py-3 px-4">
           Go To Store
         </Button>
       </Container>
@@ -249,7 +293,7 @@ const Checkout = () => {
                       <div key={item.id} className="checkout-item-row d-flex justify-content-between align-items-center mb-3">
                         <div className="d-flex align-items-center gap-3">
                           <img 
-                            src={item.image} 
+                            src={Array.isArray(item.image) ? item.image[0] : item.image}
                             alt={item.name} 
                             className="checkout-item-thumb rounded-2"
                           />
@@ -269,31 +313,34 @@ const Checkout = () => {
 
                   <div className="summary-row d-flex justify-content-between mb-2">
                     <span className="text-muted">Subtotal</span>
-                    <span>${cartTotal.toFixed(2)}</span>
+                    <span>₹{cartTotal.toFixed(2)}</span>
                   </div>
                   
                   <div className="summary-row d-flex justify-content-between mb-2">
                     <span className="text-muted">Shipping</span>
-                    <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                    <span>{shipping === 0 ? "Free" : `₹${shipping.toFixed(2)}`}</span>
                   </div>
 
                   <div className="summary-row d-flex justify-content-between mb-3">
                     <span className="text-muted">Estimated Tax (8%)</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>₹{tax.toFixed(2)}</span>
                   </div>
 
                   <hr className="my-3" />
 
                   <div className="summary-row d-flex justify-content-between mb-4">
                     <span className="total-label font-bold">Total</span>
-                    <span className="total-val font-bold">${finalTotal.toFixed(2)}</span>
+                    <span className="total-val font-bold">₹{finalTotal.toFixed(2)}</span>
                   </div>
+
+                  {error && <p className="text-danger small">{error}</p>}
 
                   <Button 
                     type="submit" 
                     className="btn-pay w-100 py-3 d-flex align-items-center justify-content-center gap-2"
+                    disabled={submitting}
                   >
-                    Place Order - ${finalTotal.toFixed(2)}
+                    {submitting ? "Placing Order..." : `Place Order - ₹${finalTotal.toFixed(2)}`}
                   </Button>
                 </Card>
               </div>

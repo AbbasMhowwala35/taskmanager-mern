@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { FiFacebook, FiTwitter, FiInstagram } from "react-icons/fi";
@@ -11,16 +11,16 @@ const Footer = () => {
   const { logoSettings, socialLinks } = useSettings();
   const [categories, setCategories] = useState([]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     const response = await axios.get(
       `${REACT_API_URL}/categories`
     );
     setCategories(response.data.data);
-  };
+  }, [REACT_API_URL]);
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -63,6 +63,7 @@ const Footer = () => {
             <h6 className="footer-title mb-3">Explore</h6>
             <ul className="list-unstyled footer-links">
               <li><Link to="/">Home</Link></li>
+              <li><Link to="/shop">Shop</Link></li>
               <li><Link to="/about">About Us</Link></li>
               <li><Link to="/contact">Contact</Link></li>
               <li><Link to="/cart">Shopping Cart</Link></li>
@@ -74,8 +75,8 @@ const Footer = () => {
             <h6 className="footer-title mb-3">Categories</h6>
             <ul className="list-unstyled footer-links">
               {categories.map((cat, idx) => (
-                <li key={idx}>
-                  <a href={`/#featured-products`}>{cat?.name}</a>
+                <li key={cat._id || idx}>
+                  <Link to={`/shop?category=${cat?._id}`}>{cat?.name}</Link>
                 </li>
               ))}
             </ul>

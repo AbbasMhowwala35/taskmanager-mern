@@ -4,6 +4,12 @@ const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);
 
+const getProductId = (product) => product._id || product.id;
+const getProductImage = (product) => Array.isArray(product.image) ? product.image[0] : product.image;
+const getProductCategory = (product) => (
+  typeof product.category === "object" ? product.category?.name : product.category
+);
+
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem("cart");
@@ -15,19 +21,27 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCart = (product) => {
+    const productId = getProductId(product);
+    const normalizedProduct = {
+      ...product,
+      id: productId,
+      image: getProductImage(product),
+      category: getProductCategory(product),
+    };
+
     setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
+      const existingItem = prevItems.find((item) => getProductId(item) === productId);
       if (existingItem) {
         return prevItems.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          getProductId(item) === productId ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prevItems, { ...product, quantity: 1 }];
+      return [...prevItems, { ...normalizedProduct, quantity: 1 }];
     });
   };
 
   const removeFromCart = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    setCartItems((prevItems) => prevItems.filter((item) => getProductId(item) !== id));
   };
 
   const updateQuantity = (id, quantity) => {
@@ -36,7 +50,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     setCartItems((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
+      prevItems.map((item) => (getProductId(item) === id ? { ...item, quantity } : item))
     );
   };
 
