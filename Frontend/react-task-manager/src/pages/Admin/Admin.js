@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Table, Button, Modal, Form, Tabs, Tab, ListG
 import { FiPlus, FiEdit, FiTrash2, FiTag, FiDollarSign, FiStar, FiGrid, FiSettings, FiShare2, FiSave } from "react-icons/fi";
 import axios from "axios";
 import { useSettings } from "../../context/SettingsContext";
+import { useAuth } from "../../context/AuthContext";
 import "./Admin.css";
 import { useEffect } from "react";
 
@@ -12,6 +13,7 @@ const Admin = () => {
     logoSettings, setLogoSettings,
     socialLinks, setSocialLinks
   } = useSettings();
+  const { authHeader } = useAuth();
 
   const REACT_API_URL = process.env.REACT_APP_API_URL;
   // Tab State
@@ -136,15 +138,16 @@ const Admin = () => {
   const handleProductSubmit = async (e) => {
     e.preventDefault();
     if (productEditMode) {
-      // updateProduct({ id: selectedProductId, ...productFormData });
       await axios.put(
         `${REACT_API_URL}/products/${selectedProductId}`,
-        productFormData
+        productFormData,
+        { headers: authHeader() }
       );
     } else {
       await axios.post(
         `${REACT_API_URL}/products`,
-        productFormData
+        productFormData,
+        { headers: authHeader() }
       );
     }
     fetchProducts();
@@ -212,15 +215,18 @@ const Admin = () => {
     e.preventDefault();
     if (newCatName.trim()) {
       if (catEditMode) {
-        // updateProduct({ id: selectedProductId, ...productFormData });
         await axios.put(
           `${REACT_API_URL}/categories/${selectedCatId}`,
-          { name: newCatName }
+          { name: newCatName },
+          { headers: authHeader() }
         );
+        setCatEditMode(false);
+        setSelectedCatId(null);
       } else {
         await axios.post(
           `${REACT_API_URL}/categories`,
-          { name: newCatName }
+          { name: newCatName },
+          { headers: authHeader() }
         );
       }
       fetchCategories();
@@ -249,7 +255,8 @@ const Admin = () => {
   const deleteProduct = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       await axios.delete(
-        `${REACT_API_URL}/products/${id}`
+        `${REACT_API_URL}/products/${id}`,
+        { headers: authHeader() }
       );
       fetchProducts();
     }
@@ -258,7 +265,8 @@ const Admin = () => {
   const deleteCategory = async (id) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       await axios.delete(
-        `${REACT_API_URL}/categories/${id}`
+        `${REACT_API_URL}/categories/${id}`,
+        { headers: authHeader() }
       );
       fetchCategories();
     }

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 
@@ -19,8 +20,10 @@ app.get("/", (req, res) => {
   res.send("API Running...");
 });
 
+// AUTH ROUTES
+app.use("/api/auth", authRoutes);
 
-// TASK ROUTES
+// RESOURCE ROUTES
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 
